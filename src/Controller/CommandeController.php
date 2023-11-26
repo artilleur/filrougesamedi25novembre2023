@@ -51,6 +51,7 @@ class CommandeController extends AbstractController
 if ($this->isGranted('ROLE_ADMIN')) {
 
     $tva = 20; 
+    $remise= 10;
 } elseif ($this->isGranted('ROLE_COMMERCIAL')) {
     
     $tva = 20; 
@@ -58,6 +59,7 @@ if ($this->isGranted('ROLE_ADMIN')) {
 } elseif ($this->isGranted('ROLE_COMMERCE')) {
     
     $tva = 20; 
+    $remise= 10;
 
 }
 
@@ -84,7 +86,7 @@ elseif ($this->isGranted('ROLE_USER')) {
             
             }
 
-            $totaltva += round($soustotal+($soustotal*$tva/100),2);
+            $totaltva += round($soustotal+($soustotal*$tva/100)-($soustotal*$remise/100),2);
 
 
 
@@ -109,7 +111,7 @@ elseif ($this->isGranted('ROLE_USER')) {
             'userData' => $userData,
             'fdp' => $fdp,
             'tva'=> $tva,
-            
+            'remise'=> $remise,
         ]);
         
 
@@ -128,11 +130,12 @@ elseif ($this->isGranted('ROLE_USER')) {
        $soustotal = 0;
        $fdp = 6;
        $totaltva = 0;
-      
+       $remise = 0;
 
 if ($this->isGranted('ROLE_ADMIN')) {
 
    $tva = 20;
+   $remise= 10;
 } elseif ($this->isGranted('ROLE_COMMERCIAL')) {
    
    $tva = 20; 
@@ -140,7 +143,7 @@ if ($this->isGranted('ROLE_ADMIN')) {
 } elseif ($this->isGranted('ROLE_COMMERCE')) {
    
    $tva = 20; 
-
+   
 }
 
 elseif ($this->isGranted('ROLE_USER')) {
@@ -249,7 +252,7 @@ if ($this->isGranted('ROLE_COMMERCE')) {
         // return $this->render('commande/index.html.twig', [
         //     'controller_name' => 'CommandeController',
       //  ]);
-      return $this->render('commande/recap.html.twig',compact('total','fdp','soustotal','id','data','tva','totaltva'));
+      return $this->render('commande/recap.html.twig',compact('total','fdp','remise','soustotal','id','data','tva','totaltva'));
 
     }
 

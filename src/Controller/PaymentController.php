@@ -43,7 +43,7 @@ class PaymentController extends AbstractController
         $soustotal = 0;
         $fdp = 6;
         $totaltva = 0;
-
+        $remise = 0;
 
      foreach ($order->getCommandeDetails()->getValues() as $product) {
         //pour recup le nom du produit
@@ -69,24 +69,25 @@ class PaymentController extends AbstractController
      // Calculate TVA based on user's role
  if ($this->isGranted('ROLE_COMMERCE')) {
     $tva =20;
+    $remise =5;
 } 
  elseif ($this->isGranted('ROLE_ADMIN')) {
     $tva =20;
-    
+    $remise=10;
 } 
 else {
     $tva = 20;
 }
 
 
-$totaltva +=round( $soustotal+($soustotal*$tva/100),2) * 100;
+$totaltva +=round( $soustotal+($soustotal*$tva/100)-($soustotal*$remise/100),2) * 100;
 
 $producStripe[] = [
     'price_data' => [
         'currency' => 'eur',
-        'unit_amount' => round(($soustotal*$tva/100),2) * 100,
+        'unit_amount' => round(($soustotal*$tva/100)-($soustotal*$remise/100),2) * 100,
         'product_data' => [
-            'name' => 'tva'
+            'name' => 'tva+remise'
         ]
     ],
     'quantity' => 1,
